@@ -13,24 +13,24 @@ import (
 
 var activites models.Activities
 
-type SuccessMessage struct {
+type SuccessMessageActivities struct {
 	Status  string            `json:"status"`
 	Message string            `json:"message"`
 	Data    models.Activities `json:"data"`
 }
 
-type ArrSuccessMessage struct {
+type ArrSuccessMessageActivities struct {
 	Status  string              `json:"status"`
 	Message string              `json:"message"`
 	Data    []models.Activities `json:"data"`
 }
 
-type DeleteMessage struct {
+type DeleteMessageActivities struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 }
 
-type ErrMessage struct {
+type ErrMessageActivities struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Code    int64  `json:"code"`
@@ -43,7 +43,7 @@ func CreateActivities(w http.ResponseWriter, r *http.Request) {
 
 	_, err := json.Marshal(a)
 	if err != nil {
-		err_msg := ErrMessage{
+		err_msg := ErrMessageActivities{
 			Status:  "ERROR",
 			Message: "Error while creating new activities",
 			Code:    http.StatusInternalServerError,
@@ -53,7 +53,7 @@ func CreateActivities(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err_msg)
 	}
 
-	success_msg := SuccessMessage{
+	success_msg := SuccessMessageActivities{
 		Status:  "Success",
 		Message: "Success",
 		Data:    *a,
@@ -68,7 +68,7 @@ func GetActivities(w http.ResponseWriter, r *http.Request) {
 
 	_, err := json.Marshal(activities)
 	if err != nil {
-		err_msg := ErrMessage{
+		err_msg := ErrMessageActivities{
 			Status:  "ERROR",
 			Message: "Error when fetching all activities",
 			Code:    http.StatusInternalServerError,
@@ -78,7 +78,7 @@ func GetActivities(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err_msg)
 	}
 
-	success_msg := ArrSuccessMessage{
+	success_msg := ArrSuccessMessageActivities{
 		Status:  "Success",
 		Message: "Success",
 		Data:    activities,
@@ -101,7 +101,7 @@ func GetActivityById(w http.ResponseWriter, r *http.Request) {
 	activity, _ := models.GetActivityById(id)
 	_, err = json.Marshal(activity)
 	if err != nil {
-		err_msg := ErrMessage{
+		err_msg := ErrMessageActivities{
 			Status:  "ERROR",
 			Message: "Error when fetching activity",
 			Code:    http.StatusInternalServerError,
@@ -111,7 +111,7 @@ func GetActivityById(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err_msg)
 	}
 
-	success_msg := SuccessMessage{
+	success_msg := SuccessMessageActivities{
 		Status:  "Success",
 		Message: "Success",
 		Data:    *activity,
@@ -130,7 +130,7 @@ func UpdateActivities(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.ParseInt(activity_id, 0, 0)
 	if err != nil {
-		err_msg := ErrMessage{
+		err_msg := ErrMessageActivities{
 			Status:  "ERROR",
 			Message: "Error when updating activity",
 			Code:    http.StatusInternalServerError,
@@ -150,7 +150,7 @@ func UpdateActivities(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error while parsing!!!")
 	}
 
-	success_msg := SuccessMessage{
+	success_msg := SuccessMessageActivities{
 		Status:  "Success",
 		Message: "Success",
 		Data:    *activity,
@@ -167,7 +167,7 @@ func DeleteActivity(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.ParseInt(activity_id, 0, 0)
 	if err != nil {
-		err_msg := ErrMessage{
+		err_msg := ErrMessageActivities{
 			Status:  "ERROR",
 			Message: "Error when deleting activity",
 			Code:    http.StatusInternalServerError,
@@ -177,14 +177,14 @@ func DeleteActivity(w http.ResponseWriter, r *http.Request) {
 	}
 
 	successDeleted := models.DeleteActivity(id)
-	var success_msg DeleteMessage
+	var success_msg DeleteMessageActivities
 	if successDeleted {
-		success_msg = DeleteMessage{
+		success_msg = DeleteMessageActivities{
 			Status:  "Success",
 			Message: fmt.Sprintf("Success Deleted id: %d", id),
 		}
 	} else {
-		success_msg = DeleteMessage{
+		success_msg = DeleteMessageActivities{
 			Status:  "Not Found",
 			Message: fmt.Sprintf("Activity with ID %d Not Found", id),
 		}

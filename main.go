@@ -12,6 +12,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 	routes.RegisterActivitiesRoutes(r)
+	routes.RegisterTodosRoutes(r)
 	http.Handle("/", r)
 	localServer := "http://localhost:3030"
 	fmt.Println(fmt.Sprintf("Server running on: %s", localServer))
